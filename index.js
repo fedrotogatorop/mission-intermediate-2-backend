@@ -9,16 +9,21 @@ app.use(bodyParser.json());
 
 // endpoint to handle GET requests to the root URL
 app.get("/", (req, res) => {
-  db.query("SELECT * FROM users", (err, results) => {
-    // hasil data dari mysql
+  const sql = "SELECT * FROM users";
+  db.query(sql, (err, resuts) => {
     response(200, results, "List of users", res);
   });
 });
 
-app.get("/hello", (req, res) => {
-  console.log({ urlParam: req.query });
-  res.send("Hello, World!");
+app.get("/find", (req, res) => {
+  console.log("find id:", req.query.id);
+
+  const sql = `SELECT * FROM users WHERE id= ${req.query.id}`;
+  db.query(sql, (err, results) => {
+    response(200, results, "User found", res);
+  });
 });
+
 app.post("/login", (req, res) => {
   console.log({ reqFromOutside: req.body });
   res.send("Login successful!");
