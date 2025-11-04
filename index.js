@@ -3,16 +3,15 @@ const app = express();
 const port = 3000;
 const bodyParser = require("body-parser");
 const db = require("./connection");
-const response = require("express");
+const response = require("./response");
 // middleware to parse JSON request bodies
 app.use(bodyParser.json());
 
 // endpoint to handle GET requests to the root URL
 app.get("/", (req, res) => {
-  // res.send("Utama Express Server is running!");
   db.query("SELECT * FROM users", (err, results) => {
-    // hasil dari database
-    response(200, results, "get all data from users", res);
+    // hasil data dari mysql
+    response(200, results, "List of users", res);
   });
 });
 
