@@ -8,12 +8,22 @@ const response = require("./response");
 app.use(bodyParser.json());
 
 // endpoint to handle GET requests to the root URL
-app.get("/", (req, res) => {
+app.get("/users/:id", (req, res) => {
+  const sql = `SELECT * FROM users WHERE id = ${req.params.id}`;
+  db.query(sql, (err, results) => {
+    if (err) throw err;
+    response(200, results, "User found", res);
+  });
+});
+
+app.get("/users", (req, res) => {
   const sql = "SELECT * FROM users";
   db.query(sql, (err, results) => {
+    if (err) throw err;
     response(200, results, "List of users", res);
   });
 });
+
 app.get("/search", (req, res) => {
   const name = req.query.name;
   console.log(`Searching for users with name: ${name}`);
