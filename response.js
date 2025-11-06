@@ -8,7 +8,7 @@ const response = (statusCode, data, message, res) => {
     pagination: {
       prev: "",
       next: "",
-      max: "",
+      current: "",
     },
   });
 };

@@ -10,13 +10,23 @@ app.use(bodyParser.json());
 // endpoint to handle GET requests to the root URL
 app.get("/", (req, res) => {
   const sql = "SELECT * FROM users";
-  db.query(sql, (err, resuts) => {
+  db.query(sql, (err, results) => {
     response(200, results, "List of users", res);
   });
 });
+app.get("/search", (req, res) => {
+  const name = req.query.name;
+  console.log(`Searching for users with name: ${name}`);
 
-app.get("/find", (req, res) => {
-  console.log("find id:", req.query.id);
+  const sql = `SELECT * FROM users WHERE name LIKE '%${name}%'`;
+  db.query(sql, (err, results) => {
+    response(200, results, "Search results", res);
+  });
+});
+
+app.get("/users/:id", (req, res) => {
+  const id = req.params.id;
+  console.log(`Fetching user with ID: ${id}`);
 
   const sql = `SELECT * FROM users WHERE id= ${req.query.id}`;
   db.query(sql, (err, results) => {
@@ -26,18 +36,37 @@ app.get("/find", (req, res) => {
 
 app.post("/login", (req, res) => {
   console.log({ reqFromOutside: req.body });
-  res.send("Login successful!");
+  response(200, req.body, "Login successful", res);
 });
 
-app.put("/username", (req, res) => {
+app.post("/register", (req, res) => {
+  console.log({ registerData: req.body });
+  response(201, req.body, "User registered successfully", res);
+});
+
+// put itu untuk update data
+app.put("/user", (req, res) => {
   console.log({ updateData: req.body });
-  const username = req.body.username;
-  if (username === usernameFromDbExists) {
-    return res.status(400).send("Username is already taken.");
-  }
-  res.send("Username updated successfully!");
+  response(200, req.body, "User updated successfully", res);
 });
 
+// delete itu untuk menghapus data
+app.delete("/user", (req, res) => {
+  console.log({ deleteData: req.body });
+  response(200, req.body, "User deleted successfully", res);
+});
+
+app.post("/add-course", (req, res) => {
+  console.log({ courseData: req.body });
+  response(201, req.body, "Course added successfully", res);
+});
+
+app.post("/update-course", (req, res) => {
+  console.log({ updateCourseData: req.body });
+  response(200, req.body, "Course updated successfully", res);
+});
+
+// start the server
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
